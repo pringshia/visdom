@@ -168,6 +168,7 @@ class Application(tornado.web.Application):
             serialize_env(self.state, ['main'], env_path=self.env_path)
 
         tornado_settings['static_url_prefix'] = self.base_url + "/static/"
+        tornado_settings['debug'] = True
         handlers = [
             (r"%s/events" % self.base_url, PostHandler, {'app': self}),
             (r"%s/update" % self.base_url, UpdateHandler, {'app': self}),
@@ -363,7 +364,7 @@ class SocketHandler(BaseWebSocketHandler):
             send_to_sources(self, msg.get('data'))
         elif cmd == 'pop_embeddings_pane':
             packet = msg.get('data')
-            eid = self.state[packet['eid']]
+            eid = packet['eid']
             win = packet['target']
             p = self.state[eid]['jsons'][win]
             p['content']['selected'] = None
